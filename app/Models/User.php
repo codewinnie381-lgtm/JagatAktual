@@ -7,6 +7,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\User;
 
 class User extends Authenticatable
 {
@@ -35,7 +36,7 @@ class User extends Authenticatable
     }
 public function author()
 {
-    return $this->hasOne(Author::class);
+    return $this->belongsTo(User::class, 'user_id');
 }
     /**
      * The attributes that should be hidden for serialization.

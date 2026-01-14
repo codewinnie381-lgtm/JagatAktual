@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AuthorResource\Pages;
 use App\Filament\Resources\AuthorResource\RelationManagers;
-use App\Models\Author;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
 
 class AuthorResource extends Resource
 {
@@ -19,10 +20,14 @@ class AuthorResource extends Resource
 {
     return auth()->user()->role === 'admin';
 }
-    protected static ?string $model = Author::class;
+    protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-
+public static function getEloquentQuery(): Builder
+{
+    return parent::getEloquentQuery()
+        ->where('role', 'author');
+}
     public static function form(Form $form): Form
     {
         return $form
@@ -41,28 +46,25 @@ class AuthorResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\ImageColumn::make('avatar')->circular(),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('username'),
-                Tables\Columns\TextColumn::make('bio'),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+    return $table
+        ->columns([
+            Tables\Columns\TextColumn::make('name')->searchable(),
+            Tables\Columns\TextColumn::make('email')->searchable(),
+            Tables\Columns\TextColumn::make('created_at')->date(),
+        ])
+        ->actions([
+            Tables\Actions\ViewAction::make(),
+        ]);
     }
+public static function canCreate(): bool
+{
+    return false;
+}
 
+public static function canDelete(Model $record): bool
+{
+    return false;
+}
     public static function getRelations(): array
     {
         return [

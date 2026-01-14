@@ -3,6 +3,13 @@
 @section('title', $news->title)
 
 @section('content')
+@php
+    $categoryColors = [
+        'olahraga'  => '#2563eb',
+        'kesehatan'   => '#9333ea',
+        'teknologi' => '#16a34a',
+    ];
+@endphp
     <!-- Detail Berita -->
     <div class="flex flex-col px-4 lg:px-14 mt-10">
         <div class="font-bold text-xl lg:text-2xl mb-6 text-center lg:text-left">
@@ -27,8 +34,8 @@
                         @foreach ($newests as $new)
                             <a href="{{ route('news.show', $new->slug) }}">
                                 <div class="flex gap-3 border border-slate-300 hover:border-primary p-3 rounded-xl">
-                                    <div
-                                        class="bg-primary text-white rounded-full w-fit px-5 py-1 ml-2 mt-2 font-normal text-xs absolute">
+                                 <div class="text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute"
+                                 style="background-color: {{ $categoryColors[$new->newsCategory->slug] ?? '#2563eb' }};">
                                         {{ $new->newsCategory->title }}
                                     </div>
                                     <div class="flex gap-3 flex-col lg:flex-row">

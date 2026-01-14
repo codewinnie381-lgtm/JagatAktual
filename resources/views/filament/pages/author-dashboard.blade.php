@@ -11,14 +11,14 @@
         <x-filament::card>
             <h3 class="font-semibold">Total Berita Kamu</h3>
             <p class="text-3xl mt-2">
-                {{ \App\Models\News::where('author_id', auth()->id())->count() }}
+                {{ \App\Models\News::where('user_id', auth()->id())->count() }}
             </p>
         </x-filament::card>
 
         <x-filament::card>
             <h3 class="font-semibold">Berita Dipublish</h3>
             <p class="text-3xl mt-2">
-                {{ \App\Models\News::where('author_id', auth()->id())->count() }}
+                {{ \App\Models\News::where('user_id', auth()->id())->count() }}
             </p>
         </x-filament::card>
     </div>

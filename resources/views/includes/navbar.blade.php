@@ -14,11 +14,21 @@
    
             <div class="flex items-center gap-8">
 
-                <a href="{{ route('landing') }}">
-                    <div class="flex items-center gap-2">
-                        <img src="{{ asset('assets/img/Logo.png') }}" alt="Logo" class="w-20 lg:w-100">
-                    </div>
-                </a>
+  <a href="{{ route('landing') }}">
+    <div class="flex items-center">
+        <span
+            style="
+                font-size: 1.75rem;
+                font-weight: 800;
+                letter-spacing: -0.5px;
+                color: white;
+                line-height: 1;
+            "
+        >
+            Jagat Aktual
+        </span>
+    </div>
+</a>
                 
 
                 <div class="hidden lg:flex items-center">

@@ -3,50 +3,48 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\NewsResource\Pages;
-use App\Filament\Resources\NewsResource\RelationManagers;
 use App\Models\News;
 use Filament\Forms;
-use Filament\Forms\Set;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class NewsResource extends Resource
 {
-    
     protected static ?string $model = News::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+
+    /* =========================
+     * PERMISSION
+     * ========================= */
     public static function canEdit(Model $record): bool
     {
-        return auth()->user()->can('update', $record);
+        return auth()->user()->role === 'admin'
+            || $record->user_id === auth()->id();
     }
 
     public static function canDelete(Model $record): bool
     {
-        return auth()->user()->can('delete', $record);
+        return auth()->user()->role === 'admin'
+            || $record->user_id === auth()->id();
     }
+
     /* =========================
      * FORM
      * ========================= */
     public static function form(Form $form): Form
     {
         return $form->schema([
-            // AUTHOR (HANYA ADMIN)
-            Forms\Components\Select::make('author_id')
-                ->relationship('author', 'name')
-                ->required()
-                ->visible(fn () => auth()->user()->role === 'admin'),
 
-            // AUTO AUTHOR UNTUK AUTHOR
-            Forms\Components\Hidden::make('author_id')
-                ->default(fn () => auth()->id())
-                ->visible(fn () => auth()->user()->role === 'author'),
+            // AUTO USER_ID (AUTHOR / ADMIN)
+            Forms\Components\Hidden::make('user_id')
+                ->default(fn () => auth()->id()),
 
             Forms\Components\Select::make('news_category_id')
                 ->relationship('newsCategory', 'title')
@@ -84,7 +82,7 @@ class NewsResource extends Resource
         $query = parent::getEloquentQuery();
 
         if (auth()->user()->role === 'author') {
-            $query->where('author_id', auth()->id());
+            $query->where('user_id', auth()->id());
         }
 
         return $query;
@@ -106,18 +104,8 @@ class NewsResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-
-                Tables\Actions\EditAction::make()
-                    ->visible(fn ($record) =>
-                        auth()->user()->role === 'admin'
-                        || $record->author_id === auth()->id()
-                    ),
-
-                Tables\Actions\DeleteAction::make()
-                    ->visible(fn ($record) =>
-                        auth()->user()->role === 'admin'
-                        || $record->author_id === auth()->id()
-                    ),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 

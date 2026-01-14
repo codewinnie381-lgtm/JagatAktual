@@ -105,7 +105,15 @@
 </section>
 @endif
 
-    <!-- Berita Unggulan -->
+@php
+    $categoryColors = [
+        'olahraga'  => '#2563eb',
+        'kesehatan'   => '#9333ea',
+        'teknologi' => '#16a34a',
+    ];
+@endphp
+
+<!-- Berita Unggulan -->
     <div class="flex flex-col px-14 mt-10 ">
         <div class="flex flex-col md:flex-row justify-between items-center w-full mb-6">
             <div class="font-bold text-2xl text-center md:text-left">
@@ -123,7 +131,10 @@
                     <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
                         style="height: 100%">
                         <div
-                            class="bg-primary text-white rounded-full w-fit px-5 py-1 font-normal ml-2 mt-2 text-sm absolute">
+    class="text-white rounded-full w-fit px-5 py-1 font-normal ml-2 mt-2 text-sm absolute"
+    style="background-color: {{ $categoryColors[$featured->newsCategory->slug] ?? '#2563eb' }};"
+>
+
                             {{ $featured->newsCategory->title }}
                         </div>
                         <img src="{{ asset('storage/' . $featured->thumbnail) }}" alt=""
@@ -146,38 +157,34 @@
 
       <div class="grid grid-cols-1 gap-5 lg:grid-cols-4">
         <!-- Berita Utama -->
-@php
-    $headline = $news->first();
-@endphp
-
-@if ($headline)
-    <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
-        style="height: 100%;">
-        <a href="{{ route('news.show', $headline->slug) }}">
-            <div class="bg-primary text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute">
-                {{ $headline->newsCategory->title }}
-            </div>
-            <img src="{{ asset('storage/'.$headline->thumbnail) }}" alt="" class="w-full rounded-xl mb-3">
-            <p class="font-bold text-xl mt-1">
-                {{ $headline->title }}
-            </p>
-            <p class="text-slate-400 text-base mt-1">
-                {!! \Str::limit($headline->content, 100) !!}
-            </p>
-        </a>
-    </div>
-@else
-    <div class="border border-dashed border-slate-300 p-6 rounded-xl text-center text-slate-400">
-        Belum ada berita terbaru
-    </div>
-@endif
+       <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
+    style="height: 100%;">
+    <a href="{{ route('news.show', $news[0]->slug) }}">
+        <div
+    class="text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute"
+    style="background-color: {{ $categoryColors[$news[0]->newsCategory->slug] ?? '#2563eb' }};"
+>
+            {{ $news[0]->newsCategory->title }}    
+        </div>
+        <img src="{{ asset('storage/'.$news[0]->thumbnail) }}" alt="" class="w-full rounded-xl mb-3">
+        <p class="font-bold text-xl mt-1">
+            {{ $news[0]->title }}
+        </p>
+        <p class="text-slate-400 text-base mt-1">
+            {!! \Str::limit($news[0]->content, 100) !!}
+        </p>
+    </a>
+</div>
 
           <!-- Berita 1 -->
 @foreach ($news->skip(1) as $new)
     <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
         style="height: 100%;">
         <a href="{{ route('news.show', $new->slug) }}">
-            <div class="bg-primary text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute">
+            <div
+    class="text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute"
+    style="background-color: {{ $categoryColors[$new->newsCategory->slug] ?? '#2563eb' }};"
+>
                 {{ $new->newsCategory->title }}
             </div>
             <img src="{{ asset('storage/'.$new->thumbnail) }}" alt="" class="w-full rounded-xl mb-3">
@@ -206,7 +213,9 @@
                     <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
                         style="height: 100%;">
                         <div
-                            class="bg-primary text-white rounded-full w-fit px-5 py-1 font-normal ml-2 mt-2 text-sm absolute">
+    class="text-white rounded-full w-fit px-5 py-1 font-normal ml-2 mt-2 text-sm absolute"
+    style="background-color: {{ $categoryColors[$choice->newsCategory->slug] ?? '#2563eb' }};"
+>
                             {{ $choice->newsCategory->title }}
                         </div>
                         <img src="{{ asset('storage/' . $choice->thumbnail) }}" alt=""
