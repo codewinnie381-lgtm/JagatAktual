@@ -29,4 +29,12 @@ class News extends Model
     {
         return $this->hasone(Banner::class);
     }
+    protected static function booted()
+{
+    static::creating(function ($news) {
+        if (auth()->check()) {
+            $news->author_id = auth()->id();
+        }
+    });
+}
 }

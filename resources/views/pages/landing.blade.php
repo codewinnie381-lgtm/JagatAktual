@@ -4,33 +4,106 @@
 
 @section('content')
     <!-- swiper -->
-    <div class="swiper mySwiper mt-9">
-        <div class="swiper-wrapper">
-            @foreach ($banners as $banner)
-                <div class="swiper-slide">
-                    <a href="{{ route('news.show', $banner->news->slug) }}" class="block">
-                        <div class="relative flex flex-col gap-1 justify-end p-3 h-72 rounded-xl bg-cover bg-center overflow-hidden"
-                            style="background-image: url('{{ asset('storage/' . $banner->news->thumbnail) }}')">
-                            <div
-                                class="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-[rgba(0,0,0,0.4)] to-[rgba(0,0,0,0)] rounded-b-xl">
-                            </div>
-                            <div class="relative z-10 mb-3" style="padding-left: 10px;">
-                                <div class="bg-primary text-white text-xs rounded-lg w-fit px-3 py-1 font-normal mt-3">
-                                    {{ $banner->news->newsCategory->title }}
-                                </div>
-                                <p class="text-3xl font-semibold text-white mt-1">{{ $banner->news->title }}</p>
-                                <div class="flex items-center gap-1 mt-1">
-                                    <img src="{{ asset('storage/' . $banner->news->author->avatar) }}" alt=""
-                                        class="w-5 h-5 rounded-full">
-                                    <p class="text-white text-xs">{{ $banner->news->author->name }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+<section
+    style="
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        color: #ffffff;
+        padding: 4.5rem 1rem;
+        text-align: center;
+    "
+>
+    <div
+        style="
+            max-width: 1200px;
+            margin: 0 auto;
+        "
+    >
+        <h1
+            style="
+                font-size: 2.75rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+            "
+        >
+            Selamat Datang di Jagat Aktual
+        </h1>
+
+        <p
+            style="
+                font-size: 1.125rem;
+                opacity: 0.95;
+                max-width: 600px;
+                margin: 0 auto;
+                line-height: 1.6;
+            "
+        >
+            Portal berita terpercaya dengan informasi terkini dari berbagai
+            kategori
+        </p>
+    </div>
+</section>
+
+@if (isset($categories) && $categories->count())
+<section
+    style="
+        background-color: #f8fafc;
+        padding: 2.5rem 1rem;
+    "
+>
+    <div
+        style="
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        "
+    >
+        <h2
+            style="
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+                color: #0f172a;
+            "
+        >
+            Kategori Berita
+        </h2>
+
+        <div
+            style="
+                display: flex;
+                justify-content: center;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            "
+        >
+            @foreach ($categories as $category)
+                <a
+                    href="{{ route('category.show', $category->slug) }}"
+                    style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.4rem;
+                        padding: 0.6rem 1.25rem;
+                        border-radius: 999px;
+                        background-color: {{ $category->color ?? '#2563eb' }};
+                        color: #ffffff;
+                        text-decoration: none;
+                        font-size: 0.875rem;
+                        font-weight: 500;
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+                    "
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 14px rgba(0,0,0,0.12)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.08)'"
+                >
+                    {{ $category->icon ?? '' }}
+                    {{ $category->title }}
+                </a>
             @endforeach
         </div>
     </div>
+</section>
+@endif
 
     <!-- Berita Unggulan -->
     <div class="flex flex-col px-14 mt-10 ">
@@ -40,7 +113,7 @@
                 <p>Untuk Kamu</p>
             </div>    
         <a href="{{ route('news.all') }}"
-                class="bg-primary px-5 py-2 rounded-full text-white font-semibold mt-4 md:mt-0 h-fit"style="background-color: #33595E;">
+                class="bg-primary px-5 py-2 rounded-full text-white font-semibold mt-4 md:mt-0 h-fit"style="background-color: #2563eb;">
                 Lihat Semua
             </a>
         </div>
@@ -73,21 +146,31 @@
 
       <div class="grid grid-cols-1 gap-5 lg:grid-cols-4">
         <!-- Berita Utama -->
-       <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
-    style="height: 100%;">
-    <a href="{{ route('news.show', $news[0]->slug) }}">
-        <div class="bg-primary text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute">
-            {{ $news[0]->newsCategory->title }}    
-        </div>
-        <img src="{{ asset('storage/'.$news[0]->thumbnail) }}" alt="" class="w-full rounded-xl mb-3">
-        <p class="font-bold text-xl mt-1">
-            {{ $news[0]->title }}
-        </p>
-        <p class="text-slate-400 text-base mt-1">
-            {!! \Str::limit($news[0]->content, 100) !!}
-        </p>
-    </a>
-</div>
+@php
+    $headline = $news->first();
+@endphp
+
+@if ($headline)
+    <div class="border border-slate-200 p-3 rounded-xl hover:border-primary hover:cursor-pointer transition duration-300 ease-in-out"
+        style="height: 100%;">
+        <a href="{{ route('news.show', $headline->slug) }}">
+            <div class="bg-primary text-white rounded-full w-fit px-4 py-1 font-normal ml-5 mt-5 absolute">
+                {{ $headline->newsCategory->title }}
+            </div>
+            <img src="{{ asset('storage/'.$headline->thumbnail) }}" alt="" class="w-full rounded-xl mb-3">
+            <p class="font-bold text-xl mt-1">
+                {{ $headline->title }}
+            </p>
+            <p class="text-slate-400 text-base mt-1">
+                {!! \Str::limit($headline->content, 100) !!}
+            </p>
+        </a>
+    </div>
+@else
+    <div class="border border-dashed border-slate-300 p-6 rounded-xl text-center text-slate-400">
+        Belum ada berita terbaru
+    </div>
+@endif
 
           <!-- Berita 1 -->
 @foreach ($news->skip(1) as $new)

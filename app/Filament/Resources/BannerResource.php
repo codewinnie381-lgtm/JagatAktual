@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BannerResource extends Resource
 {
+    public static function shouldRegisterNavigation(): bool
+{
+    return auth()->user()->role === 'admin';
+}
     protected static ?string $model = Banner::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-photo';

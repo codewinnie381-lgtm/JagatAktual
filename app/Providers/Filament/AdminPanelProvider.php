@@ -17,16 +17,27 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Facades\Filament;
 
 class AdminPanelProvider extends PanelProvider
 {
+
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
+               // 🔑 INI KUNCI UTAMA
+            ->homeUrl(fn () =>
+                auth()->user()?->role === 'author'
+                    ? '/admin/author-dashboard'
+                    : '/admin'
+            )
             ->login()
+            ->passwordReset()
+            ->emailVerification()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -39,6 +50,9 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+            ])
+               ->pages([
+                Pages\Dashboard::class, // admin dashboard
             ])
             ->middleware([
                 EncryptCookies::class,

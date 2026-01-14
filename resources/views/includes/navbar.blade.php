@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="sticky top-0 z-50 py-5 px-4 lg:px-14 shadow-sm" style="background-color:#33595e; color: white;">
+    <div class="sticky top-0 z-50 py-5 px-4 lg:px-14 shadow-sm" style="background-color:#2563eb; color: white;">
 
         <div class="flex items-center justify-between w-full">
    
@@ -41,16 +41,34 @@
                 </div>
             </div>
             
-            <!-- Desktop Search - Right -->
-            <div class="hidden lg:flex items-center">
-                <form method="GET" action="{{ route('search') }}" class="relative flex items-center">
-                    <input type="text" name="search" placeholder="Cari berita..." 
-                           class="border border-slate-300 rounded-full px-4 py-2 pl-8 w-64 text-sm font-normal focus:outline-none focus:ring-primary focus:border-primary text-black" />
-                    <button type="submit" class="absolute left-3">
-                        <img src="{{ asset('assets/img/search.png') }}" alt="search" class="w-4">
-                    </button>
-                </form>
-            </div>
+<!-- Desktop Search + Login - Right -->
+<div class="hidden lg:flex items-center gap-4">
+    <!-- Search -->
+    <form method="GET" action="{{ route('search') }}" class="relative flex items-center">
+        <input type="text" name="search" placeholder="Cari berita..." 
+               class="border border-slate-300 rounded-full px-4 py-2 pl-8 w-64 text-sm font-normal focus:outline-none focus:ring-primary focus:border-primary text-black" />
+        <button type="submit" class="absolute left-3">
+            <img src="{{ asset('assets/img/search.png') }}" alt="search" class="w-4">
+        </button>
+    </form>
+
+    <!-- Login Button -->
+    <a
+        href="{{ url('/admin/login') }}"
+        class="px-5 py-2 rounded-full text-white font-semibold text-sm transition-all duration-200"
+        style="background-color: #dc2626;"
+        onmouseover="this.style.backgroundColor='#b91c1c'"
+        onmouseout="this.style.backgroundColor='#dc2626'"
+    >
+        Login
+    </a>
+
+     <!-- Register Button -->
+    <a href="{{ route('author.register') }}"
+       class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition">
+        Register
+    </a>
+</div>
             
             <!-- Mobile Hamburger Button -->
             <button class="lg:hidden text-white text-2xl focus:outline-none" id="menu-toggle">
@@ -87,6 +105,23 @@
                         </button>
                     </form>
                 </li>
+                            <!-- Login Mobile -->
+                <li class="w-full mt-3">
+                    <a
+                        href="{{ url('/admin/login') }}"
+                        class="block w-full text-center py-2 rounded-full font-semibold text-white"
+                        style="background-color: #dc2626;"
+                    >
+                        Login
+                    </a>
+                </li>
+                <!-- Register Mobile -->
+<li class="w-full mt-3">
+    <a href="{{ route('author.register') }}"
+       class="block w-full text-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-full transition">
+        Register
+    </a>
+</li>
             </ul>
         </div>
     </div>
@@ -105,7 +140,7 @@
                     menu.classList.remove('hidden');
                     menu.classList.add('flex');
                     setTimeout(() => {
-                        menu.style.maxHeight = '500px';
+                        menu.style.maxHeight = menu.scrollHeight + 'px';
                         menu.style.opacity = '1';
                     }, 10);
                     hamburgerIcon.innerHTML = '✕';
